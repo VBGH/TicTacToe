@@ -1,0 +1,40 @@
+{
+   "expo": {
+      "name": "Tic Tac Toe",
+      "slug": "TicTacToe",
+      "privacy": "public",
+      "sdkVersion": "34.0.0",
+      "platforms": [
+         "ios",
+         "android",
+         "web"
+      ],
+      "version": "1.1.0",
+      "orientation": "portrait",
+      "icon": "./assets/images/xo.png",
+      "splash": {
+         "image": "./assets/images/fundal.png",
+         "resizeMode": "contain",
+         "backgroundColor": "#ffffff"
+      },
+      "updates": {
+         "fallbackToCacheTimeout": 0
+      },
+      "assetBundlePatterns": [
+         "**/*"
+      ],
+      "ios": {
+         "supportsTablet": true
+      },
+      "android": {
+         "package": "com.bgh.TicTacToe",
+         "versionCode": 2,
+         "permissions": [
+            "android.permission.ACESS_NETWORK_STATE",
+            "android.permission.INTERNET",
+            "android.permission.SYSTEM_ALERT_WINDOW",
+            "com.google.android.c2dm.permission.RECEIVE"
+         ]
+      }
+   }
+}
