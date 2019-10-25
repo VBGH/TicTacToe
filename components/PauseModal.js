@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableHighlight, Modal, Text } from 'react-native';
 import layout from '../constants/Layout';
+import normalize from '../components/normalize';
 
 class PauseModalComponent extends React.Component {
    constructor(props) {
@@ -26,21 +27,21 @@ class PauseModalComponent extends React.Component {
             >
                <View style={{ backgroundColor: "#f2eecb", paddingTop: 50, height: layout.window.height - 90 }}>
                   <Text style={{
-                     fontSize: layout.isSmallDevice ? 35 : 50, justifyContent: 'center',
+                     fontSize: normalize(50), justifyContent: 'center',
                      alignItems: 'center',
                      alignSelf: 'center',
                   }} >PAUSE</Text>
                   <View style={styles.view} >
                      <TouchableHighlight style={styles.buttons} onPress={() => { this.setState({ visible: false }); }}>
-                        <Text style={{ fontSize: layout.isSmallDevice ? 17 : 25 }}>Resume</Text>
+                        <Text style={{ fontSize: normalize(25) }}>Resume</Text>
                      </TouchableHighlight>
 
                      <TouchableHighlight style={styles.buttons} onPress={() => { this.setState({ visible: false }); this.props.create() }}>
-                        <Text style={{ fontSize: layout.isSmallDevice ? 17 : 25 }}>Restart  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                        <Text style={{ fontSize: normalize(25) }}>Restart  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
                      </TouchableHighlight>
 
                      <TouchableHighlight style={styles.buttons} onPress={() => { this.setState({ visible: false }); this.props.destroy() }}>
-                        <Text style={{ fontSize: layout.isSmallDevice ? 17 : 25 }}>Home  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                        <Text style={{ fontSize: normalize(25) }}>Home  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
                      </TouchableHighlight>
 
                      {/* <TouchableHighlight style={styles.buttons} onPress={() => { this.setState({ visible: false }); this.props.destroy() }}>

@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Modal, Text } from 'react-native';
 import Animation from './Animation';
 import layout from '../constants/Layout';
 import TextAnimations from './TextAnimations';
+import normalize from '../components/normalize';
 
 class DrawModalComponent extends React.Component {
    constructor(props) {
@@ -24,7 +25,7 @@ class DrawModalComponent extends React.Component {
                transparent={true}
                visible={this.state.visible}
                presentationStyle='overFullScreen'>
-               <View style={{ backgroundColor: "#f2eecb", height: layout.window.height -90 }}>
+               <View style={{ backgroundColor: "#f2eecb", height: layout.window.height - 50 }}>
                   <View style={{ flex: 1, flexDirection: 'column', marginBottom: 75 }}>
                      <View style={{
                         flex: 1, flexDirection: 'row', justifyContent: 'center',
@@ -54,13 +55,13 @@ class DrawModalComponent extends React.Component {
                      <View style={{
                         flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', alignSelf: 'center'
                      }}>
-                        <TextAnimations size={75} text='DRAW' />
+                        <TextAnimations size={normalize(75)} text='DRAW' />
                         <View style={styles.buttonsContainer}>
                            <TouchableOpacity style={styles.leftButton} onPress={() => { this.setState({ visible: false }); this.props.create() }}>
-                              <Text style={{ fontSize: 25 }}>Retry {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                              <Text style={{ fontSize: normalize(25) }}>Retry {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
                            </TouchableOpacity>
                            <TouchableOpacity style={styles.rightButton} onPress={() => { this.setState({ visible: false }); this.props.destroy() }}>
-                              <Text style={{ fontSize: 25 }}>Home  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                              <Text style={{ fontSize: normalize(25) }}>Home  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
                            </TouchableOpacity>
                         </View>
                      </View>

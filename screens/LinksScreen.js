@@ -15,6 +15,7 @@ class LinksScreen extends React.Component {
       big: false,
       giant: false,
       numberCharsToWin: 3,
+      aiLevel: 2,
       pvp: true,
       computerMoveFirst: false
    }
@@ -33,15 +34,46 @@ class LinksScreen extends React.Component {
       if (this.state.pvp) return (<View />)
 
       return (
-         <View style={styles.view}>
-            <View style={[styles.buttons]}>
-               <CheckBox
-                  checkedIcon='dot-circle-o'
-                  uncheckedIcon='circle-o'
-                  value={this.state.computerMoveFirst}
-                  onValueChange={() => this.setState({ computerMoveFirst: !this.state.computerMoveFirst })}
-               />
-               <Text>Computer moves first</Text>
+         <View>
+            <View style={styles.view}>
+
+               <View style={[styles.buttons]}>
+                  <CheckBox
+                     checkedIcon='dot-circle-o'
+                     uncheckedIcon='circle-o'
+                     value={this.state.computerMoveFirst}
+                     onValueChange={() => this.setState({ computerMoveFirst: !this.state.computerMoveFirst })}
+                  />
+                  <Text style={styles.longText}>
+                     Computer moves first
+                     </Text>
+               </View>
+            </View>
+            <Text style={styles.title}>
+               Difficulty
+                     </Text>
+            <View style={styles.view} >
+
+               <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.aiLevel === 1 ? '#f2eecb' : 'white' }]}
+                  onPress={() => { this.setState({ aiLevel: 1 }) }}>
+                  <Text style={styles.longText}>
+                     Easy
+                           </Text>
+               </TouchableOpacity>
+               <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.aiLevel === 2 ? '#f2eecb' : 'white' }]}
+                  onPress={() => { this.setState({ aiLevel: 2 }) }}>
+                  <Text style={styles.longText}>
+                     Medium
+                           </Text>
+               </TouchableOpacity>
+            </View>
+            <View style={styles.view} >
+               <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.aiLevel === 3 ? '#f2eecb' : 'white' }]}
+                  onPress={() => { this.setState({ aiLevel: 3 }) }}>
+                  <Text style={styles.longText}>
+                     Impossible
+                           </Text>
+               </TouchableOpacity>
             </View>
          </View>
       )
@@ -228,7 +260,7 @@ const styles = StyleSheet.create({
       marginTop: 0
    },
    title: {
-      fontSize: normalize(25),
+      fontSize: normalize(22),
       margin: 15,
       marginTop: 15,
       flexDirection: 'row',

@@ -9,11 +9,11 @@
          "android",
          "web"
       ],
-      "version": "1.1.0",
+      "version": "2.0.0",
       "orientation": "portrait",
       "icon": "./assets/images/xo.png",
       "splash": {
-         "image": "./assets/images/fundal.png",
+         "image": "./assets/images/fundal1.png",
          "resizeMode": "contain",
          "backgroundColor": "#ffffff"
       },
@@ -28,7 +28,7 @@
       },
       "android": {
          "package": "com.bgh.TicTacToe",
-         "versionCode": 2,
+         "versionCode": 3,
          "permissions": [
             "android.permission.ACESS_NETWORK_STATE",
             "android.permission.INTERNET",

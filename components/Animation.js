@@ -9,7 +9,7 @@ class Animation extends Component {
       this.state = {
          length: props.length,
          image: props.image,
-         timing: props.timing || 300
+         timing: props.timing || 200
       }
       this.animatedValue = new Animated.Value(0);
       this.animatedValueBorder = new Animated.Value(0);

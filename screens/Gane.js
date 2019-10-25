@@ -4,15 +4,15 @@ import { NavigationEvents } from 'react-navigation';
 import layout from '../constants/Layout';
 import {
    AdMobBanner,
-   AdMobInterstitial,
-   PublisherBanner,
-   AdMobRewarded
+   AdMobInterstitial
 } from 'expo-ads-admob'; import { FontAwesome } from '@expo/vector-icons';
 import Item from '../components/Item';
 import WinnerModalComponent from '../components/WinnerModal';
 import PauseModalComponent from '../components/PauseModal';
 import DrawModalComponent from '../components/DrawModal';
 import Player from '../components/AI'
+import Storage from '../components/Storage'
+import StatsComponent from '../components/Stats';
 
 mapMoves = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]];
 points = [];
@@ -22,6 +22,7 @@ disable = false;
 pozitionsLeft = max * max;
 thirdTime = 0;
 winPositions = [];
+randomTime = 1;
 
 class Game extends React.Component {
    static navigationOptions = {
@@ -33,12 +34,19 @@ class Game extends React.Component {
    modalDraw;
    backHandler;
    refs = [];
+   storage;
+   stats;
 
    constructor(props) {
       super(props);
       this.animatedValue = new Animated.Value(0);
       this.animatedValueBorder = new Animated.Value(0);
       const { navigation } = props;
+      this.storage = new Storage();
+      this.storage.getStats(navigation.getParam('aiLevel', 3).toString())
+         .then(stats => {
+            this.stats = stats;
+         });
 
       this.state = {
          max: navigation.getParam('max', 3),
@@ -46,6 +54,7 @@ class Game extends React.Component {
          squareLength: navigation.getParam('squareLength', 50),
          pvp: navigation.getParam('pvp', false),
          ai: navigation.getParam('ai', false),
+         aiLevel: navigation.getParam('aiLevel', 3),
          ml: navigation.getParam('ml', false),
          computerMoveFirst: navigation.getParam('computerMoveFirst', false),
          zoomLevel: navigation.getParam('max', 3) >= 10 ? 1 : 3,
@@ -76,16 +85,6 @@ class Game extends React.Component {
    getRows = (i) => {
       var columns = [];
       for (let j = 0; j < this.state.max; j++) {
-         // if (this.state.max === 3) {
-         //    refs[i][j] = React.createRef();
-         //    columns.push((
-         //       <Item key={i + j + Math.random()} ref={refs[i][j]} disable={this.getDisable} i={i} j={j} squareLength={this.state.squareLength} onPress={this.onPress} simbol={this.getSimbol} max={this.state.max}></Item>
-         //    ))
-         // } else {
-         //    columns.push((
-         //       <Item key={i + j + Math.random()} i={i} j={j} disable={this.getDisable} squareLength={this.state.squareLength} onPress={this.onPress} simbol={this.getSimbol} max={this.state.max}></Item>
-         //    ))
-         // }
          refs[i][j] = React.createRef();
          columns.push((
             <Item key={i + j + Math.random()}
@@ -95,6 +94,7 @@ class Game extends React.Component {
                j={j}
                squareLength={this.state.squareLength}
                onPress={this.onPress}
+               computerMove={this.computerMove}
                simbol={this.getSimbol}
                max={this.state.max}
                point={points[i][j]}
@@ -112,43 +112,102 @@ class Game extends React.Component {
       return this.x ? 'x' : 'o';
    }
 
-   onPress = (i, j, computer) => {
+   onPress = (i, j) => {
       if (points[i][j] || disable) return;
       disable = true;
       pozitionsLeft--;
       points[i][j] = this.x ? 'x' : 'o';
-      var end = this.checkGameStatus(i, j);
+      var end = this.checkGameStatus(i, j, 'player');
       this.x = !this.x;
-      if (!computer)
-         this.computerTurn(i, j);
-      else
-         disable = false;
-      if (end) disable = true;
+      if (pozitionsLeft === 8 && this.state.max === 3) {
+         setTimeout(() => {
+            if (this.state.pvp)
+               disable = end;
+            else if (!end)
+               this.computerTurn(i, j);
+         }, 300);
+      } else {
+         if (this.state.pvp)
+            disable = end;
+         else if (!end)
+            this.computerTurn(i, j);
+      }
    }
 
    computerTurn() {
       if (!this.state.pvp) {
-         let p = new Player(this.state.numberCharsToWin, this.state.max);
-         var index = p.minimax(JSON.parse(JSON.stringify(points)), this.getSimbol()).index;
+         var index;
+         if (this.state.aiLevel > 1) {
+            let moveNumber = this.state.computerMoveFirst ? 3 : 4;
+            if (randomTime % moveNumber === 0 && this.state.aiLevel === 2) {
+               index = this.getRandomMove();
+            } else {
+               let p = new Player(this.state.numberCharsToWin, this.state.max);
+               index = p.minimax(JSON.parse(JSON.stringify(points)), this.getSimbol()).index;
+            }
+            randomTime += 1;
+
+         } else {
+            index = this.getRandomMove();
+         }
+
          if (index) {
             setTimeout(() => {
                disable = false;
-               refs[index.i][index.j].current.onPress(true);
+               refs[index.i][index.j].current.computerMove();
             }, 300);
          }
+
       } else {
          disable = false;
       }
    }
 
-   checkGameStatus(i, j) {
+   getRandomMove() {
+      var index;
+      while (true) {
+         let random = Math.floor(Math.random() * mapMoves.length);
+         index = {
+            i: mapMoves[random][0],
+            j: mapMoves[random][1]
+         }
+         if (!points[index.i][index.j]) {
+            mapMoves.splice(random, 1);
+            break;
+         }
+      }
+      return index;
+   }
+
+   computerMove = (i, j) => {
+      if (points[i][j]) return;
+      disable = true;
+      pozitionsLeft--;
+      points[i][j] = this.x ? 'x' : 'o';
+      var end = this.checkGameStatus(i, j, 'computer');
+      this.x = !this.x;
+      disable = end;
+   }
+
+   setStats(winner) {
+      if (this.state.pvp) return;
+      this.stats[winner] += 1;
+      this.storage.setStats(this.state.aiLevel.toString(), this.stats).then(
+         () => { },
+         console.error
+      )
+   }
+
+   checkGameStatus(i, j, turn) {
       if (this.checkHorizontal(i, j) || this.checkVertical(i, j) || this.checkHorizontalVertical(i, j) || this.checkVerticalHorizontal(i, j)) {
          winPositions.forEach((item) => {
             refs[item.i][item.j].current.onShowWin(points[item.i][item.j]);
          });
          setTimeout(() => { this.modalWinner.current.onPress(points[i][j]); }, 1000);
+         this.setStats(turn);
          return true;
       } else if (this.isTheEnd()) {
+         this.setStats('draw');
          this.modalDraw.current.onPress();
          return true;
       }
@@ -272,6 +331,7 @@ class Game extends React.Component {
 
    create = (value = this.state.max) => {
       thirdTime += 1;
+      mapMoves = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]];
       callback = () => {
          for (let i = 0; i < value; i++) {
             points[i] = [];
@@ -285,7 +345,8 @@ class Game extends React.Component {
          this.setState({ max: value, ads: false }, () => {
             if (this.state.computerMoveFirst) {
                var random = Math.floor(Math.random() * mapMoves.length);
-               refs[mapMoves[random][0]][mapMoves[random][1]].current.onPress(true);
+               refs[mapMoves[random][0]][mapMoves[random][1]].current.computerMove();
+               mapMoves.splice(random, 1);
             }
          })
       }
@@ -353,7 +414,10 @@ class Game extends React.Component {
          } else {
             return (
                <ScrollView style={styles.container}>
-                  <View style={{ flex: 1, padding: 10, paddingBottom: 50, paddingTop: 150 }}>
+                  <View style={{ flex: 1, padding: 10, paddingBottom: 50, paddingTop: 75 }}>
+                     {this.state.ai ?
+                        <StatsComponent level={'' + this.state.aiLevel} />
+                        : <View />}
                      {this.getTemplate()}
                   </View>
                </ScrollView >)

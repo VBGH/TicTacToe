@@ -12,12 +12,15 @@ class Item extends React.Component {
       };
    }
    repeted = 0;
-   onPress(computer, skip) {
+   onPress() {
       if (this.props.disable()) return;
       this.setState({ simbol: this.props.simbol() })
-      if (!skip) this.props.onPress(this.props.i, this.props.j, computer);
+      this.props.onPress(this.props.i, this.props.j);
    }
-
+   computerMove(){
+      this.setState({ simbol: this.props.simbol() })
+      this.props.computerMove(this.props.i, this.props.j);
+   }
    onShowWin(simbol) {
       this.setState({ simbol: '' }, () => {
          this.setState({ simbol }, () => {

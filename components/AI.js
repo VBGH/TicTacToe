@@ -182,8 +182,7 @@ class Player {
                bestMove = i;
             }
          } // end of for loop
-      }
-      else {
+      } else {
          let bestScore = 10000;
          for (let i = 0; i < moves.length; i++) {
             if (moves[i].score < bestScore) {
