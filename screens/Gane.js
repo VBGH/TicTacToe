@@ -353,16 +353,16 @@ class Game extends React.Component {
       if (thirdTime > 5) {
          this.setState({ ads: true })
          thirdTime = 0;
-         AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733'); // Test ID, Replace with your-admob-unit-id
-         AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
-            () => {
-               AdMobInterstitial.showAdAsync().then(
-                  () => {
-                     callback();
-                  }
-               );
-            }
-         );
+         // AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733'); // Test ID, Replace with your-admob-unit-id
+         // AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
+         //    () => {
+         //       AdMobInterstitial.showAdAsync().then(
+         //          () => {
+         //             callback();
+         //          }
+         //       );
+         //    }
+         // );
       } else {
          callback();
       }
@@ -378,17 +378,17 @@ class Game extends React.Component {
       if (thirdTime > 5) {
          this.setState({ ads: true })
          thirdTime = 0;
-         AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733'); // Test ID, Replace with your-admob-unit-id
-         AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
-            () => {
-               AdMobInterstitial.showAdAsync().then(
-                  () => {
-                     this.props.navigation.navigate('Links')
-                     this.props.navigation.navigate('Home')
-                  }
-               );
-            }
-         );
+         // AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733'); // Test ID, Replace with your-admob-unit-id
+         // AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
+         //    () => {
+         //       AdMobInterstitial.showAdAsync().then(
+         //          () => {
+         //             this.props.navigation.navigate('Links')
+         //             this.props.navigation.navigate('Home')
+         //          }
+         //       );
+         //    }
+         // );
       } else {
          thirdTime -= 1;
          this.props.navigation.navigate('Links')
@@ -414,7 +414,7 @@ class Game extends React.Component {
          } else {
             return (
                <ScrollView style={styles.container}>
-                  <View style={{ flex: 1, padding: 10, paddingBottom: 50, paddingTop: 75 }}>
+                  <View style={{ flex: 1, padding: 10, paddingBottom: 50, paddingTop: this.state.ai ? 75 : 150 }}>
                      {this.state.ai ?
                         <StatsComponent level={'' + this.state.aiLevel} />
                         : <View />}
@@ -461,13 +461,13 @@ class Game extends React.Component {
                <PauseModalComponent thirdTime={thirdTime} ref={this.modalPause} create={this.create} destroy={this.destroy} />
                <DrawModalComponent max={this.state.max} thirdTime={thirdTime} ref={this.modalDraw} create={this.create} destroy={this.destroy} />
             </View>
-            <View style={styles.commercialButtom}>
+            {/* <View style={styles.commercialButtom}>
                <AdMobBanner
                   bannerSize="smartBannerPortrait"
                   adUnitID="ca-app-pub-7742191891392966/7394497459"
                   onDidFailToReceiveAdWithError={
                      (error) => { console.log(error); }} />
-            </View>
+            </View> */}
          </View>
       );
    }

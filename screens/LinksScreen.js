@@ -15,9 +15,10 @@ class LinksScreen extends React.Component {
       big: false,
       giant: false,
       numberCharsToWin: 3,
-      aiLevel: 2,
+      aiLevel: 3,
       pvp: true,
-      computerMoveFirst: false
+      ai:false,
+      computerMoveFirst: true
    }
 
    start() {
@@ -35,8 +36,31 @@ class LinksScreen extends React.Component {
 
       return (
          <View>
-            <View style={styles.view}>
+            <Text style={styles.title}>
+               Difficulty
+                     </Text>
+            <View style={styles.view} >
 
+               <TouchableOpacity style={[styles.buttons, styles.borderRight, { backgroundColor: this.state.aiLevel === 1 ? '#87CEFA' : '#ecf3f4' }]}
+                  onPress={() => { this.setState({ aiLevel: 1 }) }}>
+                  <Text style={styles.longText}>
+                     Easy
+                           </Text>
+               </TouchableOpacity>
+               <TouchableOpacity style={[styles.buttons, styles.borderRight, { backgroundColor: this.state.aiLevel === 2 ? '#87CEFA' : '#ecf3f4' }]}
+                  onPress={() => { this.setState({ aiLevel: 2 }) }}>
+                  <Text style={styles.longText}>
+                     Medium
+                           </Text>
+               </TouchableOpacity>
+               <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.aiLevel === 3 ? '#87CEFA' : '#ecf3f4' }]}
+                  onPress={() => { this.setState({ aiLevel: 3 }) }}>
+                  <Text style={styles.longText}>
+                     Impossible
+                           </Text>
+               </TouchableOpacity>
+            </View>
+            <View style={styles.view}>
                <View style={[styles.buttons]}>
                   <CheckBox
                      checkedIcon='dot-circle-o'
@@ -46,34 +70,8 @@ class LinksScreen extends React.Component {
                   />
                   <Text style={styles.longText}>
                      Computer moves first
-                     </Text>
+                  </Text>
                </View>
-            </View>
-            <Text style={styles.title}>
-               Difficulty
-                     </Text>
-            <View style={styles.view} >
-
-               <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.aiLevel === 1 ? '#f2eecb' : 'white' }]}
-                  onPress={() => { this.setState({ aiLevel: 1 }) }}>
-                  <Text style={styles.longText}>
-                     Easy
-                           </Text>
-               </TouchableOpacity>
-               <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.aiLevel === 2 ? '#f2eecb' : 'white' }]}
-                  onPress={() => { this.setState({ aiLevel: 2 }) }}>
-                  <Text style={styles.longText}>
-                     Medium
-                           </Text>
-               </TouchableOpacity>
-            </View>
-            <View style={styles.view} >
-               <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.aiLevel === 3 ? '#f2eecb' : 'white' }]}
-                  onPress={() => { this.setState({ aiLevel: 3 }) }}>
-                  <Text style={styles.longText}>
-                     Impossible
-                           </Text>
-               </TouchableOpacity>
             </View>
          </View>
       )
@@ -102,21 +100,19 @@ class LinksScreen extends React.Component {
                         Chose your oponent:
                      </Text>
                      <View style={styles.view}>
-                        <TouchableOpacity style={[styles.buttons, { fontSize: 15, backgroundColor: this.state.pvp ? '#f2eecb' : 'white' }]}
+                        <TouchableOpacity style={[styles.buttons, styles.borderRight, { fontSize: 15, backgroundColor: this.state.pvp ? '#87CEFA' : '#ecf3f4' }]}
                            onPress={() => { this.setState({ ai: false, ml: false, pvp: true, computerMoveFirst: false }) }}>
                            <Text style={styles.text}>
                               PVP
                            </Text>
                         </TouchableOpacity>
-                     </View>
-                     <View style={styles.view}>
-                        <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.ai ? '#f2eecb' : 'white' }]}
+                        <TouchableOpacity style={[styles.buttons, styles.borderRight, { backgroundColor: this.state.ai ? '#87CEFA' : '#ecf3f4' }]}
                            onPress={() => { this.setState({ ai: true, ml: false, pvp: false, big: false, clasic: true, mediu: false, numberCharsToWin: 3, giant: false }) }}>
                            <Text style={styles.longText}>
                               Artificial intelligence
                            </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.buttons, { fontSize: 15, backgroundColor: this.state.ml ? '#f2eecb' : 'white' }]}
+                        <TouchableOpacity style={[styles.buttons, { fontSize: 15, backgroundColor: this.state.ml ? '#87CEFA' : '#ecf3f4' }]}
                            onPress={() => { this.mlOnPress(); }}>
                            <Text style={styles.longText}>
                               Machine learning
@@ -129,42 +125,45 @@ class LinksScreen extends React.Component {
                         Map dimension:
                      </Text>
                      <View style={styles.view}>
-                        <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.clasic ? '#f2eecb' : 'white' }]}
+                        <TouchableOpacity style={[styles.buttons, styles.borderRight, { backgroundColor: this.state.clasic ? '#87CEFA' : '#ecf3f4' }]}
                            onPress={() => { this.setState({ big: false, clasic: true, mediu: false, numberCharsToWin: 3, giant: false }) }}>
                            <Text style={styles.text}>
                               3x3
                            </Text>
                         </TouchableOpacity>
                         {this.state.pvp ?
-                           <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.mediu ? '#f2eecb' : 'white' }]}
+                           <TouchableOpacity style={[styles.buttons, styles.borderRight, { backgroundColor: this.state.mediu ? '#87CEFA' : '#ecf3f4' }]}
                               onPress={() => { this.setState({ big: false, clasic: false, mediu: true, numberCharsToWin: 3, giant: false }) }}>
                               <Text style={styles.text}>
                                  5x5
                            </Text>
                            </TouchableOpacity> : <View />}
-                     </View>
-                     {this.state.pvp ?
+                        {this.state.pvp ?
 
-                        <View style={styles.view}>
-                           <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.big ? '#f2eecb' : 'white' }]}
+                           <TouchableOpacity style={[styles.buttons, styles.borderRight, { backgroundColor: this.state.big ? '#87CEFA' : '#ecf3f4' }]}
                               onPress={() => { this.setState({ big: true, clasic: false, mediu: false, giant: false }) }}>
                               <Text style={styles.text}>
                                  10x10
                            </Text>
                            </TouchableOpacity>
-                           <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.giant ? '#f2eecb' : 'white' }]}
+                           : <View />}
+                        {this.state.pvp ?
+
+                           <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.giant ? '#87CEFA' : '#ecf3f4' }]}
                               onPress={() => { this.setState({ big: false, clasic: false, mediu: false, giant: true }) }}>
                               <Text style={styles.text}>
                                  15x15
                            </Text>
                            </TouchableOpacity>
-                        </View>
-                        : <View />}
+                           : <View />}
+
+                     </View>
+
                      <Text style={styles.title}>
                         Number of symbols to align:
                      </Text>
                      <View style={styles.view} >
-                        <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.numberCharsToWin === 3 ? '#f2eecb' : 'white' }]}
+                        <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.numberCharsToWin === 3 ? '#87CEFA' : '#ecf3f4' }]}
                            onPress={() => { this.setState({ numberCharsToWin: 3 }) }}>
                            <Text style={styles.text}>
                               3
@@ -172,7 +171,7 @@ class LinksScreen extends React.Component {
                         </TouchableOpacity>
                         {this.state.pvp ?
 
-                           <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.numberCharsToWin === 5 ? '#f2eecb' : 'white' }]}
+                           <TouchableOpacity style={[styles.buttons, { borderRightWidth: 1, backgroundColor: this.state.numberCharsToWin === 5 ? '#87CEFA' : '#ecf3f4' }]}
                               activeOpacity={this.state.mediu || this.state.big || this.state.giant ? 1 : 0.7}
                               onPress={() => { (this.state.mediu || this.state.big || this.state.giant) && this.setState({ numberCharsToWin: 5 }) }}>
                               <Text style={styles.text}>
@@ -182,7 +181,7 @@ class LinksScreen extends React.Component {
                            : <View />}
                         {this.state.pvp ?
 
-                           <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.numberCharsToWin === 10 ? '#f2eecb' : 'white' }]}
+                           <TouchableOpacity style={[styles.buttons, { backgroundColor: this.state.numberCharsToWin === 10 ? '#87CEFA' : '#ecf3f4' }]}
                               activeOpacity={this.state.big || this.state.giant ? 1 : 0.7} onPress={() => { (this.state.big || this.state.giant) && this.setState({ numberCharsToWin: 10 }) }}>
                               <Text style={styles.text}>
                                  10
@@ -192,20 +191,20 @@ class LinksScreen extends React.Component {
                      </View>
                   </View>
                   <View style={styles.playButton}>
-                     <FontAwesome.Button name="play-circle-o" backgroundColor="#f2eecb" onPress={() => this.start()} size={75} color="black">
+                     <FontAwesome.Button name="caret-square-o-right" backgroundColor="#ecf3f4" onPress={() => this.start()} size={75} color="#E30C0C">
 
                      </FontAwesome.Button>
                   </View>
                </ScrollView>
             </View>
 
-            <View style={styles.commercialButtom}>
+            {/* <View style={styles.commercialButtom}>
                <AdMobBanner
                   bannerSize="smartBannerPortrait"
                   adUnitID="ca-app-pub-7742191891392966/7394497459"
                   onDidFailToReceiveAdWithError={
                      (error) => { console.log(error); }} />
-            </View>
+            </View> */}
          </View>
       );
    }
@@ -218,19 +217,19 @@ const styles = StyleSheet.create({
    },
    container: {
       flex: 1,
-      backgroundColor: '#f2eecb',
+      backgroundColor: '#ecf3f4',
       padding: 5,
       paddingTop: 15,
    },
    view: {
-      padding: 15,
+      padding: 10,
       flex: 1,
       justifyContent: 'center',
       flexDirection: 'row',
    },
    buttons: {
-      backgroundColor: '#fff',
-      padding: 15,
+      // backgroundColor: '#87CEFA',
+      padding: 10,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
@@ -255,18 +254,20 @@ const styles = StyleSheet.create({
       paddingBottom: 100
    },
    text: {
-      fontSize: normalize(30),
-      margin: 15,
-      marginTop: 0
+      fontSize: normalize(17),
+      marginTop: 0,
+      color: '#E30C0C'
    },
    title: {
-      fontSize: normalize(22),
+      fontSize: normalize(20),
       margin: 15,
       marginTop: 15,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      textAlign: 'center'
+      textAlign: 'center',
+      color: '#E30C0C'
+
    },
    longText: {
       fontSize: normalize(15),
@@ -274,7 +275,12 @@ const styles = StyleSheet.create({
       marginTop: 0,
       justifyContent: 'center',
       alignItems: 'center',
-      textAlign: 'center'
+      textAlign: 'center',
+      color: '#E30C0C'
+   },
+   borderRight: {
+      borderColor: '#E30C0C',
+      borderRightWidth: 1
    }
 });
 
