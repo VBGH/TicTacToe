@@ -9,7 +9,7 @@
          "android",
          "web"
       ],
-      "version": "2.0.0",
+      "version": "2.1.0",
       "orientation": "portrait",
       "icon": "./assets/images/xo.png",
       "splash": {
@@ -28,7 +28,7 @@
       },
       "android": {
          "package": "com.bgh.TicTacToe",
-         "versionCode": 3,
+         "versionCode": 4,
          "permissions": [
             "android.permission.ACESS_NETWORK_STATE",
             "android.permission.INTERNET",

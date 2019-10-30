@@ -14,38 +14,39 @@ class StatsComponent extends React.Component {
       storage.getStats(props.level)
          .then(data => {
             this.setState({ ...data });
-         });
+         }).catch(console.error);
    }
    render() {
+      const { fontColor, backgroundColor } = this.props.theme;
       return (
-         <View style={styles.container}>
+         <View style={[styles.container, { backgroundColor: backgroundColor }]}>
             <View style={styles.view}>
                <View style={{ width: layout.window.width / 3 - 10, flexDirection: 'column' }}>
 
-                  <Text style={styles.text}>
+                  <Text style={[styles.text, { color: fontColor, backgroundColor: backgroundColor }]}>
                      Player
                </Text>
-                  <Text style={styles.text}>
+                  <Text style={[styles.text, { color: fontColor, backgroundColor: backgroundColor }]}>
                      {this.state.player}
                   </Text>
                </View>
 
                <View style={{ width: layout.window.width / 3 - 10, flexDirection: 'column' }}>
 
-                  <Text style={styles.text}>
+                  <Text style={[styles.text, { color: fontColor, backgroundColor: backgroundColor }]}>
                      Draw
                </Text>
-                  <Text style={styles.text}>
+                  <Text style={[styles.text, { color: fontColor, backgroundColor: backgroundColor }]}>
                      {this.state.draw}
                   </Text>
                </View>
 
                <View style={{ width: layout.window.width / 3 - 10, flexDirection: 'column' }}>
 
-                  <Text style={styles.text}>
+                  <Text style={[styles.text, { color: fontColor, backgroundColor: backgroundColor }]}>
                      Computer
                </Text>
-                  <Text style={styles.text}>
+                  <Text style={[styles.text, { color: fontColor, backgroundColor: backgroundColor }]}>
                      {this.state.computer}
                   </Text>
                </View>
@@ -59,7 +60,6 @@ class StatsComponent extends React.Component {
 
 const styles = StyleSheet.create({
    text: {
-      backgroundColor: '#f2eecb',
       margin: 15,
       justifyContent: 'center',
       alignItems: 'center',

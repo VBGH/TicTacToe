@@ -1,0 +1,74 @@
+{
+   "silver": {
+      "backgroundColor": "#f5f5f5",
+      "fontColor": "#616161",
+      "shadowColor": "#616161",
+      "buttonColor": "#f5f5f5",
+      "buttonColorSelected": "#bdbdbd",
+      "playButton": "black",
+      "pieces": {
+         "x": "blue",
+         "o": "red"
+      }
+   },
+   "black": {
+      "backgroundColor": "black",
+      "fontColor": "#f5f5f5",
+      "shadowColor": "white",
+      "buttonColor": "black",
+      "buttonColorSelected": "grey",
+      "playButton": "#f5f5f5",
+      "pieces": {
+         "x": "blue",
+         "o": "red"
+      }
+   },
+   "white": {
+      "backgroundColor": "white",
+      "fontColor": "black",
+      "shadowColor": "black",
+      "buttonColor": "white",
+      "buttonColorSelected": "#D3D3D3",
+      "playButton": "black",
+      "pieces": {
+         "x": "blue",
+         "o": "red"
+      }
+   },
+   "blue": {
+      "backgroundColor": "#1d2c4d",
+      "fontColor": "#8ec3b9",
+      "shadowColor": "#8ec3b9",
+      "buttonColor": "#1d2c4d",
+      "buttonColorSelected": "#4b6878",
+      "playButton": "#8ec3b9",
+      "pieces": {
+         "x": "white",
+         "o": "green"
+      }
+   },
+   "red": {
+      "backgroundColor": "#ad2222",
+      "fontColor": "#ffffff",
+      "shadowColor": "red",
+      "buttonColor": "#ad2222",
+      "buttonColorSelected": "#d31b1b",
+      "playButton": "#ffffff",
+      "pieces": {
+         "x": "black",
+         "o": "grey"
+      }
+   },
+   "retro": {
+      "backgroundColor": "#f2eecb",
+      "fontColor": "black",
+      "shadowColor": "black",
+      "buttonColor": "#f2eecb",
+      "buttonColorSelected": "white",
+      "playButton": "black",
+      "pieces": {
+         "x": "green",
+         "o": "black"
+      }
+   }
+}

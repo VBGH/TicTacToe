@@ -157,7 +157,6 @@ class Player {
       for (let i = 0; i < availableSpots.length; i++) {
          let move = {};
          move.index = { i: availableSpots[i][0], j: availableSpots[i][1] }
-         //move.index.push([availableSpots[i][0], availableSpots[i][1]]);
          newBoard[availableSpots[i][0]][availableSpots[i][1]] = player;
 
          if (player === AI_PLAYER) {
@@ -166,11 +165,11 @@ class Player {
          } else {
             let result = this.minimax(newBoard, AI_PLAYER, availableSpots[i]);
             move.score = result.score;
-         } // end of if/else block
+         }
 
          newBoard[availableSpots[i][0]][availableSpots[i][1]] = '';
          moves.push(move);
-      } // end of for look
+      }
 
       let bestMove;
 
@@ -181,7 +180,7 @@ class Player {
                bestScore = moves[i].score;
                bestMove = i;
             }
-         } // end of for loop
+         }
       } else {
          let bestScore = 10000;
          for (let i = 0; i < moves.length; i++) {

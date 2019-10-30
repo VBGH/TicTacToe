@@ -28,6 +28,7 @@ class TextAnimations extends Component {
    }
 
    getTemplate() {
+      const { colors: { x, o } } = this.props;
       return (
          <View style={{
             justifyContent: 'center',
@@ -40,7 +41,7 @@ class TextAnimations extends Component {
                   fontSize: this.animatedValue,
                   color: this.animatedValueColor.interpolate({
                      inputRange: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-                     outputRange: ['blue','red','blue','red','blue','red','blue','red','blue','red','blue']
+                     outputRange: [x, o, x, o, x, o, x, o, x, o, x]
                   })
                }}
             >{this.state.text}</Animated.Text>

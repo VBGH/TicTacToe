@@ -36,6 +36,8 @@ class Game extends React.Component {
    refs = [];
    storage;
    stats;
+   end = false;
+   lastClick = [];
 
    constructor(props) {
       super(props);
@@ -46,7 +48,7 @@ class Game extends React.Component {
       this.storage.getStats(navigation.getParam('aiLevel', 3).toString())
          .then(stats => {
             this.stats = stats;
-         });
+         }).catch(console.error);
 
       this.state = {
          max: navigation.getParam('max', 3),
@@ -58,6 +60,8 @@ class Game extends React.Component {
          ml: navigation.getParam('ml', false),
          computerMoveFirst: navigation.getParam('computerMoveFirst', false),
          zoomLevel: navigation.getParam('max', 3) >= 10 ? 1 : 3,
+         theme: navigation.getParam('theme', {}),
+         dClick: navigation.getParam('dClick', false)
       };
       for (let i = 0; i < this.state.max; i++) {
          points[i] = [];
@@ -75,7 +79,7 @@ class Game extends React.Component {
    }
 
    componentWillUnmount() {
-      this.backHandler.remove()
+      this.backHandler.remove();
    }
 
    handleBackPress = () => {
@@ -98,6 +102,8 @@ class Game extends React.Component {
                simbol={this.getSimbol}
                max={this.state.max}
                point={points[i][j]}
+               theme={this.state.theme}
+               dClick={this.state.dClick}
             ></Item>
          ))
       }
@@ -112,24 +118,33 @@ class Game extends React.Component {
       return this.x ? 'x' : 'o';
    }
 
-   onPress = (i, j) => {
-      if (points[i][j] || disable) return;
+   onPress = (i, j, process) => {
+      if (process) {
+         if (this.lastClick.length) {
+            refs[this.lastClick[0]][this.lastClick[1]].current.removeSimbol();
+         }
+         this.lastClick = [i, j];
+         return
+      }
+
+      if ((points[i][j] && (points[i][j] === 'o' || points[i][j] === 'x')) || disable) return;
+
+      this.lastClick = [];
       disable = true;
       pozitionsLeft--;
       points[i][j] = this.x ? 'x' : 'o';
-      var end = this.checkGameStatus(i, j, 'player');
+      this.end = this.checkGameStatus(i, j, 'player');
       this.x = !this.x;
-      if (pozitionsLeft === 8 && this.state.max === 3) {
+
+      if (pozitionsLeft === 8 && this.state.max === 3 && this.state.ai) {
          setTimeout(() => {
-            if (this.state.pvp)
-               disable = end;
-            else if (!end)
+            if (!this.end)
                this.computerTurn(i, j);
          }, 300);
       } else {
          if (this.state.pvp)
-            disable = end;
-         else if (!end)
+            disable = this.end;
+         else if (!this.end)
             this.computerTurn(i, j);
       }
    }
@@ -184,18 +199,15 @@ class Game extends React.Component {
       disable = true;
       pozitionsLeft--;
       points[i][j] = this.x ? 'x' : 'o';
-      var end = this.checkGameStatus(i, j, 'computer');
+      this.end = this.checkGameStatus(i, j, 'computer');
       this.x = !this.x;
-      disable = end;
+      disable = this.end;
    }
 
    setStats(winner) {
       if (this.state.pvp) return;
       this.stats[winner] += 1;
-      this.storage.setStats(this.state.aiLevel.toString(), this.stats).then(
-         () => { },
-         console.error
-      )
+      this.storage.setStats(this.state.aiLevel.toString(), this.stats).catch(console.error);
    }
 
    checkGameStatus(i, j, turn) {
@@ -203,7 +215,7 @@ class Game extends React.Component {
          winPositions.forEach((item) => {
             refs[item.i][item.j].current.onShowWin(points[item.i][item.j]);
          });
-         setTimeout(() => { this.modalWinner.current.onPress(points[i][j]); }, 1000);
+         setTimeout(() => { this.modalWinner.current.onPress(points[i][j]); }, 3000);
          this.setStats(turn);
          return true;
       } else if (this.isTheEnd()) {
@@ -309,12 +321,6 @@ class Game extends React.Component {
       return pozitionsLeft === 0;
    }
 
-   getZoomButtons() {
-      return (<View>
-
-      </View>)
-   }
-
    getTemplate = () => {
       var template = [];
       for (let i = 0; i < this.state.max; i++) {
@@ -330,6 +336,7 @@ class Game extends React.Component {
    }
 
    create = (value = this.state.max) => {
+      this.end = false;
       thirdTime += 1;
       mapMoves = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]];
       callback = () => {
@@ -343,26 +350,27 @@ class Game extends React.Component {
          pozitionsLeft = value * value;
 
          this.setState({ max: value, ads: false }, () => {
-            if (this.state.computerMoveFirst) {
+            if (this.state.computerMoveFirst && this.state.ai) {
                var random = Math.floor(Math.random() * mapMoves.length);
                refs[mapMoves[random][0]][mapMoves[random][1]].current.computerMove();
                mapMoves.splice(random, 1);
             }
          })
       }
+
       if (thirdTime > 5) {
          this.setState({ ads: true })
          thirdTime = 0;
-         // AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733'); // Test ID, Replace with your-admob-unit-id
-         // AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
-         //    () => {
-         //       AdMobInterstitial.showAdAsync().then(
-         //          () => {
-         //             callback();
-         //          }
-         //       );
-         //    }
-         // );
+         AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733');
+         AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
+            () => {
+               AdMobInterstitial.showAdAsync().then(
+                  () => {
+                     callback();
+                  }
+               );
+            }
+         );
       } else {
          callback();
       }
@@ -370,7 +378,7 @@ class Game extends React.Component {
    }
 
    setModalVisiblePause() {
-      this.modalPause.current.onPress();
+      !this.end && this.modalPause.current.onPress();
    }
 
    destroy = () => {
@@ -378,17 +386,17 @@ class Game extends React.Component {
       if (thirdTime > 5) {
          this.setState({ ads: true })
          thirdTime = 0;
-         // AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733'); // Test ID, Replace with your-admob-unit-id
-         // AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
-         //    () => {
-         //       AdMobInterstitial.showAdAsync().then(
-         //          () => {
-         //             this.props.navigation.navigate('Links')
-         //             this.props.navigation.navigate('Home')
-         //          }
-         //       );
-         //    }
-         // );
+         AdMobInterstitial.setAdUnitID('ca-app-pub-7742191891392966/2923741733'); // Test ID, Replace with your-admob-unit-id
+         AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true }).then(
+            () => {
+               AdMobInterstitial.showAdAsync().then(
+                  () => {
+                     this.props.navigation.navigate('Links')
+                     this.props.navigation.navigate('Home')
+                  }
+               );
+            }
+         );
       } else {
          thirdTime -= 1;
          this.props.navigation.navigate('Links')
@@ -397,15 +405,16 @@ class Game extends React.Component {
    }
 
    getScrollView() {
+      var theme = this.state.theme;
       if (this.state.ads) {
          return (
-            <View style={styles.loading}>
-               <ActivityIndicator size={layout.window.width / 2} color="#0000ff" />
+            <View style={[styles.loading, { backgroundColor: theme.backgroundColor }]}>
+               <ActivityIndicator size={layout.window.width / 2} backgroundColor={theme.backgroundColor} color={theme.fontColor} />
             </View>)
       } else {
          if (this.state.max >= 10) {
-            return (<ScrollView style={[styles.container]} horizontal={true}>
-               <ScrollView style={styles.container}>
+            return (<ScrollView style={[styles.container, { backgroundColor: theme.backgroundColor }]} horizontal={true}>
+               <ScrollView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
                   <View style={{ flex: 1, padding: 150 }}>
                      {this.getTemplate()}
                   </View>
@@ -413,10 +422,10 @@ class Game extends React.Component {
             </ScrollView >)
          } else {
             return (
-               <ScrollView style={styles.container}>
+               <ScrollView style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
                   <View style={{ flex: 1, padding: 10, paddingBottom: 50, paddingTop: this.state.ai ? 75 : 150 }}>
                      {this.state.ai ?
-                        <StatsComponent level={'' + this.state.aiLevel} />
+                        <StatsComponent theme={this.state.theme} level={'' + this.state.aiLevel} />
                         : <View />}
                      {this.getTemplate()}
                   </View>
@@ -426,48 +435,49 @@ class Game extends React.Component {
    }
 
    zoomIn() {
-      let zoom = this.state.max >= 10 ? 3 : 7
+      let zoom = this.state.max >= 10 ? 3 : 7;
       if (this.state.zoomLevel < 3)
-         this.setState((oldState) => { return { squareLength: this.state.squareLength + zoom, zoomLevel: oldState.zoomLevel += 1 } })
+         this.setState((oldState) => { return { squareLength: this.state.squareLength + zoom, zoomLevel: oldState.zoomLevel += 1 } });
    }
 
    zoomOut() {
-      let zoom = this.state.max >= 10 ? 3 : 7
+      let zoom = this.state.max >= 10 ? 3 : 7;
       if (this.state.zoomLevel > 0)
-         this.setState((oldState) => { return { squareLength: this.state.squareLength - zoom, zoomLevel: oldState.zoomLevel -= 1 } })
+         this.setState((oldState) => { return { squareLength: this.state.squareLength - zoom, zoomLevel: oldState.zoomLevel -= 1 } });
    }
 
    render() {
+      var { backgroundColor, playButton } = this.state.theme;
       return (
          <View style={{ height: layout.window.height }}>
             <NavigationEvents
                onWillFocus={() => this.create()}
             />
             <View opacity={this.state.ads ? 0 : 0.35} style={styles.pauseButton}>
-               <FontAwesome.Button name="pause-circle-o" backgroundColor="#f2eecb" onPress={() => this.setModalVisiblePause(true)} size={30} color="black">
+               <FontAwesome.Button name="pause-circle-o" backgroundColor={backgroundColor} onPress={() => this.setModalVisiblePause(true)} size={35} color={playButton}>
                </FontAwesome.Button>
             </View>
-            <View opacity={this.state.ads ? 0 : this.state.zoomLevel > 0 ? 0.35 : 0} style={styles.zoomButtonsMinus}>
-               <FontAwesome.Button name="minus-square-o" backgroundColor="#f2eecb" onPress={() => this.zoomOut()} size={30} color="black">
+            <View opacity={this.state.ads ? 0 : this.state.zoomLevel > 0 ? 0.5 : 0} style={[styles.zoomButtonsMinus, { backgroundColor }]}>
+               <FontAwesome.Button name="minus-square-o" backgroundColor={backgroundColor} onPress={() => this.zoomOut()} size={35} color={playButton}>
                </FontAwesome.Button>
             </View>
-            <View opacity={this.state.ads ? 0 : this.state.zoomLevel < 3 ? 0.35 : 0} style={styles.zoomButtons}>
-               <FontAwesome.Button name="plus-square-o" backgroundColor="#f2eecb" onPress={() => this.zoomIn()} size={30} color="black">
+            <View opacity={this.state.ads ? 0 : this.state.zoomLevel < 3 ? 0.5 : 0} style={[styles.zoomButtons, { backgroundColor }]}>
+               <FontAwesome.Button name="plus-square-o" backgroundColor={backgroundColor} onPress={() => this.zoomIn()} size={35} color={playButton}>
                </FontAwesome.Button>
             </View>
             <View style={{ height: layout.window.height }}>
                {this.getScrollView()}
-               <WinnerModalComponent max={this.state.max} thirdTime={thirdTime} ref={this.modalWinner} create={this.create} destroy={this.destroy} />
-               <PauseModalComponent thirdTime={thirdTime} ref={this.modalPause} create={this.create} destroy={this.destroy} />
-               <DrawModalComponent max={this.state.max} thirdTime={thirdTime} ref={this.modalDraw} create={this.create} destroy={this.destroy} />
+               <WinnerModalComponent theme={this.state.theme} max={this.state.max} thirdTime={thirdTime} ref={this.modalWinner} create={this.create} destroy={this.destroy} />
+               <PauseModalComponent theme={this.state.theme} thirdTime={thirdTime} ref={this.modalPause} create={this.create} destroy={this.destroy} />
+               <DrawModalComponent theme={this.state.theme} max={this.state.max} thirdTime={thirdTime} ref={this.modalDraw} create={this.create} destroy={this.destroy} />
             </View>
-            {/* <View style={styles.commercialButtom}>
+            <View style={styles.commercialButtom}>
                <AdMobBanner
                   bannerSize="smartBannerPortrait"
                   adUnitID="ca-app-pub-7742191891392966/7394497459"
                   onDidFailToReceiveAdWithError={
                      (error) => { console.log(error); }} />
-            </View> */}
+            </View>
          </View>
       );
    }
@@ -509,20 +519,20 @@ const styles = StyleSheet.create({
    pauseButton: {
       position: 'absolute',
       zIndex: 2,
-      top: 50,
-      right: 10,
+      top: 5,
+      left: 10,
    },
    zoomButtonsMinus: {
       position: 'absolute',
       zIndex: 2,
-      top: 50,
-      left: 50,
+      top: 5,
+      right: 50,
    },
    zoomButtons: {
       position: 'absolute',
       zIndex: 2,
-      top: 50,
-      left: 5,
+      top: 5,
+      right: 5,
    },
    buttons: {
       backgroundColor: '#fff',
@@ -548,7 +558,8 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
    },
    loading: {
-      flex: 1,
+      height: layout.window.height,
+      width: layout.window.width,
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center'

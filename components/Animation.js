@@ -9,10 +9,12 @@ class Animation extends Component {
       this.state = {
          length: props.length,
          image: props.image,
-         timing: props.timing || 200
+         timing: props.timing || 200,
+         textAnimations: props.textAnimations
       }
       this.animatedValue = new Animated.Value(0);
       this.animatedValueBorder = new Animated.Value(0);
+      this.animatedValueColor = new Animated.Value(0);
 
    }
 
@@ -40,11 +42,16 @@ class Animation extends Component {
             easing: Easing.bezier(0, 1.76, .55, -0.83)
          }).start()
       }
-
+      Animated.timing(this.animatedValueColor, {
+         toValue: 100,
+         duration: 9000,
+      }).start()
    }
 
    getTemplateSign() {
-      if (this.state.image === 'x') {
+      const { colors: { x, o } } = this.props;
+
+      if (this.state.image === 'x' || this.state.image === 'X') {
          return (
             <View style={{
                justifyContent: 'center',
@@ -56,11 +63,15 @@ class Animation extends Component {
                <Animated.View
                   style={{
                      borderWidth: this.animatedValueBorder,
-                     borderRadius:1,
+                     borderRadius: 1,
                      width: 1,
                      height: this.animatedValue,
                      position: 'absolute',
-                     borderColor: 'blue',
+                     opacity: this.props.image === 'X' || this.props.image === 'O' ? 0.1 : 1,
+                     borderColor: this.state.textAnimations ? this.animatedValueColor.interpolate({
+                        inputRange: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+                        outputRange: [x, o, x, o, x, o, x, o, x, o, x]
+                     }) : x,
                      transform: [
                         {
                            translateY: this.animatedValue.interpolate({
@@ -71,7 +82,6 @@ class Animation extends Component {
                         {
                            rotate: '45deg'
                         }
-
                      ]
                   }}
 
@@ -79,10 +89,14 @@ class Animation extends Component {
                <Animated.View
                   style={{
                      borderWidth: this.animatedValueBorder,
-                     borderRadius:1,
+                     borderRadius: 1,
                      width: this.animatedValue,
                      position: 'absolute',
-                     borderColor: 'blue',
+                     opacity: this.props.image === 'X' || this.props.image === 'O' ? 0.1 : 1,
+                     borderColor: this.state.textAnimations ? this.animatedValueColor.interpolate({
+                        inputRange: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+                        outputRange: [x, o, x, o, x, o, x, o, x, o, x]
+                     }) : x,
                      transform: [
                         {
                            translateY: this.animatedValue.interpolate({
@@ -93,7 +107,6 @@ class Animation extends Component {
                         {
                            rotate: '45deg'
                         }
-
                      ]
                   }
                   } />
@@ -112,7 +125,11 @@ class Animation extends Component {
                   style={{
                      borderWidth: this.animatedValueBorder,
                      borderRadius: this.animatedValue,
-                     borderColor: 'red',
+                     opacity: this.props.image === 'X' || this.props.image === 'O' ? 0.5 : 1,
+                     borderColor: this.state.textAnimations ? this.animatedValueColor.interpolate({
+                        inputRange: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+                        outputRange: [x, o, x, o, x, o, x, o, x, o, x]
+                     }) : o,
                      width: this.animatedValue,
                      height: this.animatedValue,
                      position: 'absolute',
@@ -121,7 +138,7 @@ class Animation extends Component {
                            translateY: this.animatedValue.interpolate({
                               inputRange: [1, 1],
                               outputRange: [1, this.state.length / 2]
-                           }),
+                           })
                         }
                      ]
                   }}

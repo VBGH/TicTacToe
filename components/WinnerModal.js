@@ -18,6 +18,7 @@ class WinnerModalComponent extends React.Component {
    }
 
    render() {
+      const { pieces, backgroundColor, fontColor } = this.props.theme;
       return (
          <View style={{ zIndex: 0 }}>
             <Modal
@@ -25,7 +26,7 @@ class WinnerModalComponent extends React.Component {
                transparent={true}
                visible={this.state.visible}
                presentationStyle='overFullScreen'>
-               <View style={{ backgroundColor: "#f2eecb", height: layout.window.height - 50 }}>
+               <View style={{ backgroundColor: backgroundColor, height: layout.window.height - 50 }}>
                   <View style={{ flex: 1, flexDirection: 'column', marginBottom: 75 }}>
                      <View style={{
                         flex: 1, flexDirection: 'row', marginLeft: layout.window.width / 2, paddingBottom: 250
@@ -35,26 +36,27 @@ class WinnerModalComponent extends React.Component {
                            image={this.state.image}
                            timing={1000}
                            max={this.props.max}
+                           colors={pieces}
                         />
                      </View>
                      <View style={{
                         flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', alignSelf: 'center'
                      }}>
-                        <TextAnimations size={normalize(75)} text='WINS' />
+                        <TextAnimations size={normalize(75)} text='WINS' colors={pieces} />
                         <View style={styles.buttonsContainer}>
                            <TouchableOpacity style={styles.leftButton} onPress={() => { this.setState({ visible: false }); this.props.create() }}>
-                              <Text style={{ fontSize: 25 }}>Retry  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                              <Text style={{ fontSize: 25, color: fontColor }}>Retry  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
                            </TouchableOpacity>
 
                            <TouchableOpacity style={styles.rightButton} onPress={() => { this.setState({ visible: false }); this.props.destroy() }}>
-                              <Text style={{ fontSize: 25 }}>Home  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                              <Text style={{ fontSize: 25, color: fontColor }}>Home  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
                            </TouchableOpacity>
                         </View>
                      </View>
-                  </View >
+                  </View>
                </View>
             </Modal>
-         </View >
+         </View>
       );
    }
 }
