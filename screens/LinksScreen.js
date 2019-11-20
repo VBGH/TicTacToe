@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Text, TouchableOpacity, CheckBox, Alert } from 'react-native';
+import { ScrollView, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import layout from '../constants/Layout';
 import { AdMobBanner } from 'expo-ads-admob';
 import { FontAwesome } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import normalize from '../components/normalize';
 import SideMenu from '../components/SideMenu';
 import stylesJSON from '../styles/styles.json';
 import Storage from '../components/Storage'
+import Language from '../components/Language';
 
 theme = 'silver';
 dClick = false;
@@ -24,7 +25,8 @@ class LinksScreen extends React.Component {
       pvp: true,
       ai: false,
       computerMoveFirst: true,
-      theme: 'retro'
+      theme: 'retro',
+      lang: 'en'
    }
 
    constructor() {
@@ -43,6 +45,11 @@ class LinksScreen extends React.Component {
          .then(dBClick => {
             dClick = dBClick;
             this.setState({ dClick });
+         }).catch(console.error);
+      this.storage.getLang()
+         .then(lang => {
+            if (lang !== this.state.lang)
+               this.setState({ lang });
          }).catch(console.error);
    }
 
@@ -70,27 +77,29 @@ class LinksScreen extends React.Component {
       return (
          <View>
             <Text style={[styles.title, { color: stylesJSON[theme].fontColor }]}>
-               Difficulty
+               <Language text='difficulty' lang={this.state.lang} />
             </Text>
             <View style={styles.view} >
-               <TouchableOpacity style={[styles.buttons, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.aiLevel === 1 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
-                  onPress={() => { this.setState({ aiLevel: 1 }) }}>
+               <TouchableOpacity style={[styles.buttons, this.state.aiLevel === 1 ? styles.activeButton : {}, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.aiLevel === 1 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                  onPress={() => {
+                     this.setState({ aiLevel: 1, lang: 'ro' })
+                  }}>
                   <Text style={[styles.longText, { color: stylesJSON[theme].fontColor }]}>
-                     Easy
+                     <Language text='easy' lang={this.state.lang} />
                   </Text>
                </TouchableOpacity>
-               <TouchableOpacity style={[styles.buttons, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.aiLevel === 2 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
-                  onPress={() => { this.setState({ aiLevel: 2 }) }}>
+               <TouchableOpacity style={[styles.buttons, this.state.aiLevel === 2 ? styles.activeButton : {}, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.aiLevel === 2 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                  onPress={() => { this.setState({ aiLevel: 2, lang: 'en' }) }}>
                   <Text style={[styles.longText, { color: stylesJSON[theme].fontColor }]}>
-                     Medium
+                     <Language text='medium' lang={this.state.lang} />
                   </Text>
                </TouchableOpacity>
             </View>
             <View style={styles.view} >
-               <TouchableOpacity style={[styles.buttons, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.aiLevel === 3 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+               <TouchableOpacity style={[styles.buttons, this.state.aiLevel === 3 ? styles.activeButton : {}, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.aiLevel === 3 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                   onPress={() => { this.setState({ aiLevel: 3 }) }}>
                   <Text style={[styles.longText, { color: stylesJSON[theme].fontColor }]}>
-                     Impossible
+                     <Language text='impossible' lang={this.state.lang} />
                   </Text>
                </TouchableOpacity>
             </View>
@@ -107,7 +116,7 @@ class LinksScreen extends React.Component {
                               onPress={() => { this.setState({ computerMoveFirst: false }) }}
                               size={normalize(17)} color={stylesJSON[theme].fontColor}
                               style={[styles.longText, { color: stylesJSON[theme].fontColor }]}>
-                              Computer moves first
+                              <Language text='movesFirst' lang={this.state.lang} />
                            </FontAwesome.Button>
                            :
                            <FontAwesome.Button name="square-o" backgroundColor={stylesJSON[theme].backgroundColor}
@@ -115,7 +124,7 @@ class LinksScreen extends React.Component {
                               size={normalize(17)} color={stylesJSON[theme].playButton}
                               style={[styles.longText, { color: stylesJSON[theme].fontColor }]}
                            >
-                              Computer moves first
+                              <Language text='movesFirst' lang={this.state.lang} />
                            </FontAwesome.Button>
                         }
                      </View>
@@ -148,35 +157,35 @@ class LinksScreen extends React.Component {
                <ScrollView style={[styles.container, { backgroundColor: stylesJSON[theme].backgroundColor }]}>
                   <View>
                      <Text style={[styles.title, { color: stylesJSON[theme].fontColor }]}>
-                        Chose your oponent:
+                        <Language text='oponent' lang={this.state.lang} />
                      </Text>
                      <View style={styles.view}>
-                        <TouchableOpacity style={[styles.buttons, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, fontSize: 15, backgroundColor: this.state.pvp ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                        <TouchableOpacity style={[styles.buttons, this.state.pvp ? styles.activeButton : {}, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, fontSize: 15, backgroundColor: this.state.pvp ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                            onPress={() => { this.setState({ ai: false, ml: false, pvp: true, computerMoveFirst: false }) }}>
                            <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
-                              PVP
+                              <Language text='player' lang={this.state.lang} />
                            </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.buttons, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.ai ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                        <TouchableOpacity style={[styles.buttons, this.state.ai ? styles.activeButton : {}, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.ai ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                            onPress={() => { this.setState({ ai: true, ml: false, pvp: false, big: false, clasic: true, mediu: false, numberCharsToWin: 3, giant: false }) }}>
                            <Text style={[styles.longText, { color: stylesJSON[theme].fontColor }]}>
-                              Artificial{'\n'}intelligence
+                              <Language text='computer' lang={this.state.lang} />
                            </Text>
                         </TouchableOpacity>
                      </View>
                      {this.getComputerMoveFirstView()}
                      <Text style={[styles.title, { color: stylesJSON[theme].fontColor }]}>
-                        Map dimension:
+                        <Language text='dimension' lang={this.state.lang} />
                      </Text>
                      <View style={styles.view}>
-                        <TouchableOpacity style={[styles.buttons, this.state.pvp ? styles.borderRight : {}, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.clasic ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                        <TouchableOpacity style={[styles.buttons, this.state.clasic ? styles.activeButton : {}, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.clasic ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                            onPress={() => { this.setState({ big: false, clasic: true, mediu: false, numberCharsToWin: 3, giant: false }) }}>
                            <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
                               3 X 3
                            </Text>
                         </TouchableOpacity>
                         {this.state.pvp ?
-                           <TouchableOpacity style={[styles.buttons, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.mediu ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                           <TouchableOpacity style={[styles.buttons, this.state.mediu ? styles.activeButton : {}, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.mediu ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                               onPress={() => { this.setState({ big: false, clasic: false, mediu: true, numberCharsToWin: 3, giant: false }) }}>
                               <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
                                  5 X 5
@@ -185,7 +194,7 @@ class LinksScreen extends React.Component {
                      </View>
                      <View style={styles.view}>
                         {this.state.pvp ?
-                           <TouchableOpacity style={[styles.buttons, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.big ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                           <TouchableOpacity style={[styles.buttons, this.state.big ? styles.activeButton : {}, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.big ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                               onPress={() => { this.setState({ big: true, clasic: false, mediu: false, giant: false }) }}>
                               <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
                                  10 X 10
@@ -193,7 +202,7 @@ class LinksScreen extends React.Component {
                            </TouchableOpacity>
                            : <View />}
                         {this.state.pvp ?
-                           <TouchableOpacity style={[styles.buttons, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.giant ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                           <TouchableOpacity style={[styles.buttons, this.state.giant ? styles.activeButton : {}, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.giant ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                               onPress={() => { this.setState({ big: false, clasic: false, mediu: false, giant: true }) }}>
                               <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
                                  15 X 15
@@ -202,18 +211,22 @@ class LinksScreen extends React.Component {
                            : <View />}
                      </View>
                      <Text style={[styles.title, { color: stylesJSON[theme].fontColor }]}>
-                        Number of symbols to align
+                        <Language text='symbols' lang={this.state.lang} />
                      </Text>
                      <View style={[styles.view]} >
-                        <TouchableOpacity style={[styles.buttons, this.state.pvp ? styles.borderRight : {}, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.numberCharsToWin === 3 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                        <TouchableOpacity style={[styles.buttons, this.state.numberCharsToWin === 3 ? styles.activeButton : {},
+                        {
+                           shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor,
+                           backgroundColor: this.state.numberCharsToWin === 3 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor
+                        }]}
                            onPress={() => { this.setState({ numberCharsToWin: 3 }) }}>
                            <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
                               3
                            </Text>
                         </TouchableOpacity>
                         {this.state.pvp && (this.state.mediu || this.state.big || this.state.giant) ?
-                           <TouchableOpacity style={[styles.buttons, styles.borderRight, { shadowColor: stylesJSON[theme].shadowColor, borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.numberCharsToWin === 5 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
-                              activeOpacity={this.state.mediu || this.state.big || this.state.giant ? 0.2 : 1}
+                           <TouchableOpacity style={[styles.buttons, this.state.numberCharsToWin === 5 ? styles.activeButton : {}, styles.borderRight,
+                           { borderColor: stylesJSON[theme].fontColor, backgroundColor: this.state.numberCharsToWin === 5 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
                               onPress={() => { (this.state.mediu || this.state.big || this.state.giant) && this.setState({ numberCharsToWin: 5 }) }}>
                               <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
                                  5
@@ -221,8 +234,8 @@ class LinksScreen extends React.Component {
                            </TouchableOpacity>
                            : <View />}
                         {this.state.pvp && (this.state.big || this.state.giant) ?
-                           <TouchableOpacity style={[styles.buttons, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.numberCharsToWin === 10 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
-                              activeOpacity={this.state.big || this.state.giant ? 0.2 : 1} onPress={() => { (this.state.big || this.state.giant) && this.setState({ numberCharsToWin: 10 }) }}>
+                           <TouchableOpacity style={[styles.buttons, this.state.numberCharsToWin === 10 ? styles.activeButton : {}, { shadowColor: stylesJSON[theme].shadowColor, backgroundColor: this.state.numberCharsToWin === 10 ? stylesJSON[theme].buttonColorSelected : stylesJSON[theme].buttonColor }]}
+                              onPress={() => { (this.state.big || this.state.giant) && this.setState({ numberCharsToWin: 10 }) }}>
                               <Text style={[styles.text, { color: stylesJSON[theme].fontColor }]}>
                                  10
                            </Text>
@@ -231,18 +244,18 @@ class LinksScreen extends React.Component {
                      </View>
                   </View>
                   <View style={styles.playButton}>
-                     <FontAwesome.Button name="caret-square-o-right" backgroundColor={stylesJSON[theme].backgroundColor} onPress={() => this.start()} size={75} color={stylesJSON[theme].playButton}>
+                     <FontAwesome.Button style={[styles.buttons, styles.activeButton]} name="caret-square-o-right" backgroundColor={stylesJSON[theme].backgroundColor} onPress={() => this.start()} size={75} color={stylesJSON[theme].playButton}>
                      </FontAwesome.Button>
                   </View>
                </ScrollView>
             </View>
-            <View style={styles.commercialButtom}>
+            {/* <View style={styles.commercialButtom}>
                <AdMobBanner
                   bannerSize="smartBannerPortrait"
                   adUnitID="ca-app-pub-7742191891392966/7394497459"
                   onDidFailToReceiveAdWithError={
                      (error) => { console.log(error); }} />
-            </View>
+            </View> */}
          </View >
       );
    }
@@ -258,7 +271,7 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: stylesJSON[theme].backgroundColor,
       padding: 5,
-      paddingTop: 15,
+      paddingTop: 25,
       zIndex: 1
    },
    view: {
@@ -276,16 +289,25 @@ const styles = StyleSheet.create({
       paddingBottom: 25,
       paddingTop: 25,
    },
+   activeButton: {
+      shadowColor: stylesJSON[theme].shadowColor,
+      shadowOffset: {
+         width: 20,
+         height: 20,
+      },
+      shadowOpacity: 0.45,
+      shadowRadius: 50,
+      elevation: 10,
+   },
    playButton: {
-      width: layout.window.width,
-      padding: 15,
+      // width: layout.window.width,
       bottom: 0,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      elevation: 10,
-      paddingBottom: 100
+      paddingBottom: 100,
+      padding: 15
    },
    text: {
       fontSize: normalize(17),
@@ -318,7 +340,7 @@ const styles = StyleSheet.create({
       position: 'absolute',
       zIndex: 2,
       top: 5,
-      left: 10,
+      left: 10
    }
 });
 

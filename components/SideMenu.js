@@ -107,36 +107,6 @@ class SideMenu extends React.Component {
 
                <View style={styles.view}>
                   <TouchableOpacity style={[styles.buttons]}
-                     onPress={() => { this.onClose('white') }}>
-                     <View style={styles.right}>
-                        <Text style={[styles.text, styles.left, { color: fontColor }]}>White</Text>
-
-                        <View style={{
-                           width: layout.window.width / 10, borderWidth: 1, borderColor: fontColor,
-                           height: 20, backgroundColor: "white"
-                        }}></View>
-                        <View style={{
-                           width: layout.window.width / 10, borderWidth: 1, borderColor: fontColor,
-                           height: 20, backgroundColor: "black"
-                        }}></View>
-                        <View style={{
-                           width: layout.window.width / 10, borderWidth: 1, borderColor: fontColor,
-                           height: 20, backgroundColor: "#D3D3D3"
-                        }}></View>
-                        <View style={{
-                           width: layout.window.width / 10, borderWidth: 1, borderColor: fontColor,
-                           height: 20, backgroundColor: "#white"
-                        }}></View>
-                        <View style={{
-                           width: layout.window.width / 10, borderWidth: 1, borderColor: fontColor,
-                           height: 20, backgroundColor: "black"
-                        }}></View>
-                     </View>
-                  </TouchableOpacity>
-               </View>
-
-               <View style={styles.view}>
-                  <TouchableOpacity style={[styles.buttons]}
                      onPress={() => { this.onClose('blue') }}>
                      <View style={styles.right}>
                         <Text style={[styles.text, styles.left, { color: fontColor }]}>Blue</Text>
@@ -238,7 +208,7 @@ class SideMenu extends React.Component {
 
                               size={normalize(25)}
                            >
-                              Double click
+                              Double tap to mark
                            </FontAwesome.Button>
                            :
                            <FontAwesome.Button name="square-o"
@@ -247,7 +217,7 @@ class SideMenu extends React.Component {
                               onPress={() => { this.setDBClick(true); }}
                               size={normalize(25)}
                            >
-                              Double click
+                              Double tap to mark
                            </FontAwesome.Button>
                         }
                      </View>

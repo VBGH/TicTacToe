@@ -35,6 +35,14 @@ class Storage {
       await AsyncStorage.setItem('theme', JSON.stringify(theme));
    }
 
+   async getLang() {
+      return JSON.parse(await AsyncStorage.getItem('lang')) || 'en';
+   }
+
+   async setLang(lang) {
+      await AsyncStorage.setItem('lang', lang);
+   }
+
    async getDBClick() {
       return JSON.parse(await AsyncStorage.getItem('dBClick')) || false;
    }

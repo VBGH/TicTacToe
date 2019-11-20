@@ -1,0 +1,46 @@
+{
+   "difficulty": {
+      "en": "Difficulty:",
+      "ro": "Dificultate:"
+   },
+   "easy": {
+      "en": "Easy",
+      "ro": "Ușor"
+   },
+   "medium": {
+      "en": "Medium",
+      "ro": "Mediu"
+   },
+   "impossible": {
+      "en": "Impossible",
+      "ro": "Imposibil"
+   },
+   "movesFirst": {
+      "en": "Computer moves first",
+      "ro": "Calculatorul mută primul"
+   },
+   "oponent": {
+      "en": "Chose your oponent:",
+      "ro": "Alegeți adversarul"
+   },
+   "player": {
+      "en": "Player VS Player",
+      "ro": "Jucător VS Jucător"
+   },
+   "computer": {
+      "en": "Player VS Computer",
+      "ro": "Jucător VS Calculator"
+   },
+   "dimension": {
+      "en": "Map dimension:",
+      "ro": "Dimensiunea hărții:"
+   },
+   "symbols": {
+      "en": "Number of symbols to align:",
+      "ro": "Numărul simbolurilor de aliniat:"
+   },
+   "play": {
+      "en": "Start",
+      "ro": "Start"
+   }
+}

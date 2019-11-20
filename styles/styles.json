@@ -23,18 +23,6 @@
          "o": "red"
       }
    },
-   "white": {
-      "backgroundColor": "white",
-      "fontColor": "black",
-      "shadowColor": "black",
-      "buttonColor": "white",
-      "buttonColorSelected": "#D3D3D3",
-      "playButton": "black",
-      "pieces": {
-         "x": "blue",
-         "o": "red"
-      }
-   },
    "blue": {
       "backgroundColor": "#1d2c4d",
       "fontColor": "#8ec3b9",
