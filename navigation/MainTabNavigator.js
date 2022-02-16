@@ -1,31 +1,33 @@
-import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import LinksScreen from '../screens/LinksScreen';
-import Game from '../screens/Gane'
+import { Platform } from "react-native";
+import {
+  createStackNavigator,
+  createBottomTabNavigator,
+} from "react-navigation";
+import LinksScreen from "../screens/LinksScreen";
+import Game from "../screens/Gane";
 
 const LinksStack = createStackNavigator(
-   {
-      Links: LinksScreen,
-      Game: Game
-   },
-   Platform.select({
-      web: { headerMode: 'screen' },
-      default: {},
-   })
+  {
+    Links: LinksScreen,
+    Game: Game,
+  },
+  Platform.select({
+    web: { headerMode: "screen" },
+    default: {},
+  })
 );
 
 LinksStack.navigationOptions = {
-   tabBarLabel: 'Links',
-   tabBarOptions: { style: { display: 'none' } },
-
+  tabBarLabel: "Links",
+  tabBarOptions: { style: { display: "none" } },
 };
 
-LinksStack.path = '';
+LinksStack.path = "";
 
 const tabNavigator = createBottomTabNavigator({
-   LinksStack,
+  LinksStack,
 });
 
-tabNavigator.path = '';
+tabNavigator.path = "";
 
 export default tabNavigator;

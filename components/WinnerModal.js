@@ -45,11 +45,11 @@ class WinnerModalComponent extends React.Component {
                         <TextAnimations size={normalize(75)} text='WINS' colors={pieces} />
                         <View style={styles.buttonsContainer}>
                            <TouchableOpacity style={styles.leftButton} onPress={() => { this.setState({ visible: false }); this.props.create() }}>
-                              <Text style={{ fontSize: 25, color: fontColor }}>Retry  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                              <Text style={{ fontSize: 25, color: fontColor }}>Retry</Text>
                            </TouchableOpacity>
 
                            <TouchableOpacity style={styles.rightButton} onPress={() => { this.setState({ visible: false }); this.props.destroy() }}>
-                              <Text style={{ fontSize: 25, color: fontColor }}>Home  {this.props.thirdTime > 4 ? '\n (ADS)' : ""}</Text>
+                              <Text style={{ fontSize: 25, color: fontColor }}>Home</Text>
                            </TouchableOpacity>
                         </View>
                      </View>
